@@ -1,0 +1,344 @@
+<html>
+
+<head>
+    <title>SPK Penerima Beasiswa Menggunakan Algoritma SAW</title>
+
+    <meta charset="UTF-8">
+    <meta name="description" content="Clean and responsive administration panel">
+    <meta name="keywords" content="Admin,Panel,HTML,CSS,XML,JavaScript">
+    <meta name="author" content="Erik Campobadal">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/css/uikit.min.css">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/css/style.css">
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/css/notyf.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+    <script data-dapp-detection="">
+        (function () {
+            let alreadyInsertedMetaTag = false
+
+            function __insertDappDetected() {
+                if (!alreadyInsertedMetaTag) {
+                    const meta = document.createElement('meta')
+                    meta.name = 'dapp-detected'
+                    document.head.appendChild(meta)
+                    alreadyInsertedMetaTag = true
+                }
+            }
+
+            if (window.hasOwnProperty('web3')) {
+                // Note a closure can't be used for this var because some sites like
+                // www.wnyc.org do a second script execution via eval for some reason.
+                window.__disableDappDetectionInsertion = true
+                // Likely oldWeb3 is undefined and it has a property only because
+                // we defined it. Some sites like wnyc.org are evaling all scripts
+                // that exist again, so this is protection against multiple calls.
+                if (window.web3 === undefined) {
+                    return
+                }
+                __insertDappDetected()
+            } else {
+                var oldWeb3 = window.web3
+                Object.defineProperty(window, 'web3', {
+                    configurable: true,
+                    set: function (val) {
+                        if (!window.__disableDappDetectionInsertion)
+                            __insertDappDetected()
+                        oldWeb3 = val
+                    },
+                    get: function () {
+                        if (!window.__disableDappDetectionInsertion)
+                            __insertDappDetected()
+                        return oldWeb3
+                    }
+                })
+            }
+        })()</script>
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/uikit.min.js"></script>
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/uikit-icons.min.js"></script>
+    <style type="text/css">
+        /* Chart.js */
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+    <style id="__web-inspector-hide-shortcut-style__">
+        .__web-inspector-hide-shortcut__,
+        .__web-inspector-hide-shortcut__ *,
+        .__web-inspector-hidebefore-shortcut__::before,
+        .__web-inspector-hideafter-shortcut__::after {
+            visibility: hidden !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div uk-sticky="" class="uk-navbar-container tm-navbar-container uk-sticky uk-sticky-fixed" style="position: fixed; top: 0px; width: 1920px;">
+        <div class="uk-container uk-container-expand">
+            <nav uk-navbar="" class="uk-navbar">
+                <div class="uk-navbar-left">
+                    <a id="sidebar_toggle" class="uk-navbar-toggle uk-navbar-toggle-icon uk-icon" uk-navbar-toggle-icon="">
+                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" data-svg="navbar-toggle-icon">
+                            <rect y="9" width="20" height="2"></rect>
+                            <rect y="3" width="20" height="2"></rect>
+                            <rect y="15" width="20" height="2"></rect>
+                        </svg>
+                    </a>
+                    <a href="#" class="uk-navbar-item uk-logo">SPK Penerima Beasiswa Menggunakan Algoritma SAW</a>
+                </div>
+                <div class="uk-navbar-right uk-light">
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-active">
+                            <a href="#" aria-expanded="false">{{nama}} &nbsp;
+                                <span class="ion-ios-arrow-down"></span>
+                            </a>
+                            <div uk-dropdown="pos: bottom-right; mode: click; offset: -17;" class="uk-dropdown">
+                                <ul class="uk-nav uk-navbar-dropdown-nav">
+
+                                    <li>
+                                        <a id="logout">Logout</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div class="uk-sticky-placeholder" style="height: 80px; margin: 0px;"></div>
+    <div id="sidebar" class="tm-sidebar-left uk-background-default">
+        <center>
+            <div class="user">
+
+
+                <div id="name" class="uk-text-truncate">{{nama}}</div>
+                <div id="email" class="uk-text-truncate">{{email}}</div>
+                <span id="status" data-enabled="true" data-online-text="Online" data-away-text="Away" data-interval="10000" class="uk-margin-top uk-label uk-label-success">Online</span>
+            </div>
+            <br>
+        </center>
+        <ul class="uk-nav uk-nav-default">
+
+            <li class="uk-nav-header">Menu Pilihan :</li>
+            <li>
+                <a href="/mahasiswa">Olah Data Mahasiswa</a>
+            </li>
+            <li>
+                <a href="/pendaftar">Olah Data Pendaftar</a>
+            </li>
+            <li>
+                <a href="/admin">Olah Data Admin</a>
+            </li>
+            <li class="uk-nav-header">SPK :</li>
+            <li>
+                <a href="/spk/penerimabeasiswa">Penerima Beasiswa</a>
+            </li>
+
+
+
+
+
+
+
+
+        </ul>
+    </div>
+    <div class="content-padder content-background">
+        <div class="uk-section-small uk-section-default header">
+            <div class="uk-container uk-container-large">
+                <h1>
+                    <span class="ion-speedometer"></span> Penerimaan Beasiswa</h1>
+                <ul class="uk-breadcrumb">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <span href="">Penerimaan Beasiswa</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="uk-section-small" style="padding:15px">
+            <form action="/api/v1/admin/create" method="POST" enctype="multipart/form-data">
+                <div style="margin-bottom:15px">
+                    {%if flash.type=="success" %}
+                    <div class="uk-alert-success" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{flash.msg}}</p>
+                    </div>
+                    {%elif flash.type=="error"%}
+                    <div class="uk-alert-danger" uk-alert>
+                        <a class="uk-alert-close" uk-close></a>
+                        <p>{{flash.msg}}</p>
+                    </div>
+
+                    {%else%}
+                    <div style="display:none"></div>
+
+                    {%endif%}
+
+                    <div style="display:flex;">
+
+                        <div class="uk-margin uk-form-width-medium">
+                            <div>Semester:</div>
+                            <select id="selectSemester" class="uk-select">
+                                <option>1</option>
+                                <option>2</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-top:0px;margin-left:10px;" class="uk-form-width-medium">
+                            <div>Tahun:</div>
+                            <select id="selectTahun" class="uk-select">
+                                {% for x in tahun%}
+                                <option>{{x.tahun}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+
+                        <div style="margin-top:24px;margin-left:10px;">
+                            <button id="prosesKueri" class="uk-button uk-button-default ">Proses</button>
+                        </div>
+
+
+                    </div>
+                    <div id="containerTambahDataPendaftar" style="padding-top:15px;display:none;">
+
+
+                        <div class="uk-margin">
+                            <input class="uk-input uk-form-width-large" name="email" type="text" placeholder="Email">
+                        </div>
+
+
+
+                        <div class="uk-margin">
+                            <input class="uk-input uk-form-width-large" name="nama" type="text" placeholder="Nama">
+                        </div>
+
+
+                        <div class="uk-margin">
+                            <input class="uk-input uk-form-width-large" name="password" type="text" placeholder="Password">
+                        </div>
+
+
+                        <div class="uk-margin">
+                            <input type="submit" class="uk-button" style="background-color:white"></input>
+                        </div>
+
+
+            </form>
+
+            </div>
+            </div>
+            <div class="uk-overflow-auto" style="margin-bottom:20px">
+                <table style="background-color:white " class="uk-table uk-table-hover uk-table-middle uk-table-divider ">
+                    <thead>
+
+                        <tr>
+                            <th class="uk-table-shrink uk-text-nowrap">ID Daftar</th>
+                            <th class="uk-table-shrink uk-text-nowrap">Tanggal Daftar</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">Semester</th>
+                            <th class="uk-table-shrink uk-text-nowrap">Tahun</th>
+
+                            <th class="uk-table-shrink uk-text-nowrap ">NIM</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">Nama</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">Pendapatan</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">IPK</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">Saudara</th>
+
+                            <th class="uk-table-shrink uk-text-nowrap ">nPendapatan</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">nIPK</th>
+                            <th class="uk-table-shrink uk-text-nowrap ">nSaudara</th>
+
+                            <th class="uk-table-shrink uk-text-nowrap ">Prefensi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for items in data%}
+                        <tr>
+                            <td class="uk-text-nowrap ">{{items.id_daftar}}</td>
+                            <td class="uk-text-nowrap ">{{parsetanggal(items.tanggal_daftar)}}</td>
+                            <td class="uk-text-nowrap ">{{items.semester}}</td>
+                            <td class="uk-text-nowrap ">{{items.tahun}}</td>
+                            <td class="uk-text-nowrap ">{{items.nim}}</td>
+                            <td class="uk-text-nowrap ">{{items.nama}}</td>
+                            <td class="uk-text-nowrap ">{{items.pendapatan}}</td>
+                            <td class="uk-text-nowrap ">{{items.ipk}}</td>
+                            <td class="uk-text-nowrap ">{{items.saudara}}</td>
+                            <td class="uk-text-nowrap ">{{items.npendapatan}}</td>
+                            <td class="uk-text-nowrap ">{{items.nipk}}</td>
+                            <td class="uk-text-nowrap ">{{items.nsaudara}}</td>
+                            <td class="uk-text-nowrap ">{{items.prefensi}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Load More Javascript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js " integrity="sha256-UGwvyUFH6Qqn0PSyQVw4q3vIX0wV1miKTracNJzAWPc="
+        crossorigin=" anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.transit/0.9.12/jquery.transit.min.js " integrity="sha256-rqEXy4JTnKZom8mLVQpvni3QHbynfjPmPxQVsPZgmJY="
+        crossorigin=" anonymous "></script>
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/notyf.min.js "></script>
+    <!-- Required Overall Script -->
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/script.js "></script>
+    <!-- Status Updater -->
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/status.js "></script>
+    <!-- Sample Charts -->
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/charts.js "></script>
+    <!-- Sample Notifications -->
+    <script src="https://gitcdn.xyz/cdn/ConsoleTVs/UIAdmin/b932bd39eeafea31a0a2aa17ea64600e53fc380e/js/notification.js "></script>
+    <div class="notyf "></div>
+    <script>
+        document.querySelectorAll('#prosesKueri')[0].addEventListener('click', (e) => {
+            e.preventDefault();
+            let semester = document.querySelectorAll('#selectSemester')[0].value
+            let tahun = document.querySelectorAll('#selectTahun')[0].value
+            document.location = `/spk/penerimabeasiswa?semester=${semester}&tahun=${tahun}`;
+        })
+
+        document.querySelectorAll("#logout ")[0].addEventListener('click', (e) => {
+            e.preventDefault();
+            document.location = '/destroy';
+        })
+
+        document.querySelectorAll("#btnTambahDataPendaftar")[0].addEventListener('click', (e) => {
+            e.preventDefault();
+            if (document.querySelectorAll("#containerTambahDataPendaftar")[0].style.display === 'none') {
+                document.querySelectorAll("#containerTambahDataPendaftar")[0].style.display = "";
+            } else {
+                document.querySelectorAll("#containerTambahDataPendaftar")[0].style.display = "none";
+            }
+
+        })
+    </script>
+
+
+</body>
+
+</html>
